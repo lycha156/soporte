@@ -6,7 +6,7 @@ const Validator  = use('Validator')
 class PostsController {
 
     * index (request, response){
-        const posts = yield Post.all()
+        const posts = yield Post.query().orderBy('id', 'desc').fetch()
         yield response.sendView('home', { posts: posts.toJSON() })
     }
 
@@ -36,6 +36,11 @@ class PostsController {
 
         yield Post.create(postData) 
         response.redirect('/')
+    }
+
+    * show (request, response){
+        const post = yield Post.find(request.param('id'))
+        yield response.sendView('posts.show', { post: post.toJSON() })
     }
 }
 
